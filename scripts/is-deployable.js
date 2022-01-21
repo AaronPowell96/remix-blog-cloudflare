@@ -10,8 +10,8 @@ async function go() {
     currentCommitSha,
     compareCommitSha
   );
-  console.log("CURRENT SHA", currentCommitSha);
-  console.log("NEW SHA", compareCommitSha);
+  console.error("CURRENT SHA", currentCommitSha);
+  console.error("NEW SHA", compareCommitSha);
   console.error("Determining whether the changed files are deployable", {
     currentCommitSha,
     compareCommitSha,
