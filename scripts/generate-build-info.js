@@ -4,17 +4,18 @@ const fs = require("fs");
 // eslint-disable-next-line import/no-extraneous-dependencies
 const fetch = require("node-fetch");
 
-const commit = process.env.COMMIT_SHA;
+// const commit = process.env.COMMIT_SHA;
 
 async function getCommit() {
-  if (!commit) return { sha: "" };
+  // if (!commit) return { sha: "" };
   try {
     const res = await fetch(
-      `https://api.github.com/repos/aaronpowell96/remix-blog-cloudflare/commits/${commit}`
+      `https://api.github.com/repos/aaronpowell96/remix-blog-cloudflare/commits`
     );
-    const data = await res.json();
+    const _data = await res.json();
+    const data = _data[0];
     return {
-      isDeployCommit: commit === "HEAD" ? "Unknown" : true,
+      isDeployCommit: data.sha === "HEAD" ? "Unknown" : true,
       sha: data.sha,
       author: data.commit.author.name,
       date: data.commit.author.date,
