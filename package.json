@@ -12,6 +12,7 @@
     "dev:wrangler": "wrangler pages dev ./public --watch ./build -k --kv CONTENT",
     "start": "npm run dev:wrangler",
     "content:watch": "node ./scripts/watch-content.js",
+    "build:worker": "esbuild --define:process.env.NODE_ENV='\"production\"' --minify --bundle --sourcemap --outdir=dist ./worker",
     "act": "act compile-mdx -j compile --secret-file .env"
   },
   "dependencies": {
