@@ -32,12 +32,13 @@ type BlogContentType = {
 
 export const headers: HeadersFunction = ({ loaderHeaders }) => loaderHeaders;
 
-export const loader: LoaderFunction = async ({ request, params: { slug } }) => {
+export const loader: LoaderFunction = async ({ request, params: { slug }, context }) => {
   // const slug = params['*']
+  console.log("contextttt", context)
   if (slug === undefined) {
     throw new Response("Not Found", { status: 404 });
   }
-  const data = await CONTENT.get(`blog/${slug}`, "json");
+  const data = await context.CONTENT.get(`blog/${slug}`, "json");
   if (data === undefined) {
     throw new Response("Not Found", { status: 404 });
   }
