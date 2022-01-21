@@ -14,21 +14,13 @@ export async function onRequest(context) {
     // if (key !== `Bearer ${POST_API_KEY}`) {
     //   return new Response(`Unauthorized ${key}`, { status: 401 });
     // }
-    // return new Response(JSON.stringify(request, null, 2));
-    console.log("--------------", env);
-    const resp = await request.json();
-
-    await env.CONTENT.put("$$content-sha", JSON.stringify(resp));
-    return new Response(JSON.stringify({ success: true }));
+    const data = await request.json();
+    await env.CONTENT.put(data.slug, JSON.stringify(data));
+    return new Response(JSON.stringify({ success: true }, null, 2));
   } catch (e) {
     //@ts-expect-error
     return new Response(
       JSON.stringify({ message: e.message, stack: e.stack }, null, 2)
     );
   }
-
-  const resp = (await env.CONTENT.get("$$content-sha", "json")) || {
-    commit: { sha: "" },
-  };
-  return new Response(JSON.stringify(resp, null, 2));
 }

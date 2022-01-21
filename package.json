@@ -10,7 +10,8 @@
     "dev:remix": "remix watch",
     "dev:wrangler": "wrangler pages dev ./public --watch ./build -k --kv CONTENT",
     "start": "npm run dev:wrangler",
-    "content:watch": "node ./scripts/watch-content.js"
+    "content:watch": "node ./scripts/watch-content.js",
+    "act": "act compile-mdx -j compile --secret-file .env"
   },
   "dependencies": {
     "@remix-run/cloudflare-pages": "^1.1.3",

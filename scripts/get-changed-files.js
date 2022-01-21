@@ -13,6 +13,7 @@ function fetchJson(url) {
 
         res.on("end", () => {
           try {
+            console.log("DATAAA", url, data, res);
             resolve(JSON.parse(data));
           } catch (error) {
             reject(error);

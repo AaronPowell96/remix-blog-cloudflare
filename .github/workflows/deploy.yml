@@ -36,8 +36,7 @@ jobs:
       - name: 🔎 Determine content changes
         id: content_changes
         run: >-
-          echo ::set-output name=CONTENT::$(node ./scripts/get-changed-content.js ${{
-          github.sha }})
+          echo ::set-output name=CONTENT::$(node ./scripts/get-changed-content.js ${{ github.sha }})
 
       - name: ❓ Content
         run: >-
