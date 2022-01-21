@@ -14,6 +14,7 @@
     "start": "npm run dev:wrangler",
     "content:watch": "node ./scripts/watch-content.js",
     "build:worker": "esbuild --define:process.env.NODE_ENV='\"production\"' --minify --bundle --sourcemap --outdir=dist ./worker",
+    "deploy": "npm run build && wrangler publish",
     "act": "act compile-mdx -j compile --secret-file .env"
   },
   "dependencies": {
