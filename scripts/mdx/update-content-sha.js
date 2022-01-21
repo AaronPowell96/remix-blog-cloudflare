@@ -33,9 +33,9 @@ async function go() {
   const response = await fetch(`${process.env.API_URL}/update-content-sha`, {
     method: "post",
     body: JSON.stringify(buildInfo),
-    headers: {
-      authorization: `Bearer ${process.env.POST_API_KEY}`,
-    },
+    // headers: {
+    //   authorization: `Bearer ${process.env.POST_API_KEY}`,
+    // },
   });
   if (!response.ok) {
     console.log({ status: response.status, statusText: response.statusText });

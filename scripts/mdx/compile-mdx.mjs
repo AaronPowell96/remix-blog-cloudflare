@@ -107,9 +107,9 @@ import { Command } from "commander/esm.mjs";
         html,
         code: hasComponents ? code : undefined,
       }),
-      headers: {
-        authorization: `Bearer ${process.env.POST_API_KEY}`,
-      },
+      // headers: {
+      //   authorization: `Bearer ${process.env.POST_API_KEY}`,
+      // },
     });
     if (!response.ok) {
       const body = await response.text();
