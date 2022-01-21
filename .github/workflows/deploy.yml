@@ -26,8 +26,7 @@ jobs:
       - name: 🔎 Determine deployable changes
         id: deploy_changes
         run: >-
-          echo ::set-output name=DEPLOYABLE::$(node ./scripts/is-deployable.js ${{
-          github.sha }})
+          echo ::set-output name=DEPLOYABLE::$(node ./scripts/is-deployable.js ${{github.sha}})
 
       - name: ❓ Deployable
         run: >-
@@ -36,7 +35,7 @@ jobs:
       - name: 🔎 Determine content changes
         id: content_changes
         run: >-
-          echo ::set-output name=CONTENT::$(node ./scripts/get-changed-content.js ${{ github.sha }})
+          echo ::set-output name=CONTENT::$(node ./scripts/get-changed-content.js ${{github.sha}})
 
       - name: ❓ Content
         run: >-
