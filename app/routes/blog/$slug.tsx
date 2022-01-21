@@ -86,6 +86,7 @@ export default function Post() {
   if (typeof window !== "undefined" && code) {
     Component = getMDXComponent(code);
   }
+  console.log("test")
   return (
     <>
       {Component ? (
