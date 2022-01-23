@@ -7,12 +7,11 @@
     "clean": "rm -rf dist build public/build",
     "build": "cross-env NODE_ENV=production remix build && node ./scripts/generate-build-info.js",
     "dev": "cross-env NODE_ENV=development run-p dev:* content:watch",
-    "postinstall": "remix setup cloudflare-pages && cd scripts/mdx && npm install",
     "dev:remix": "remix watch",
     "dev:wrangler": "wrangler pages dev ./public --kv CONTENT --watch ./build",
     "start": "npm run dev:wrangler",
+    "postinstall": "remix setup cloudflare-pages && cd scripts/mdx && npm install",
     "content:watch": "cross-env API_URL=http://localhost:8788/api node ./scripts/watch-content.js --kv CONTENT --define:process.env.API_URL='\"http://localhost:8788/api\"'",
-    "build:worker": "esbuild --define:process.env.NODE_ENV='\"production\"' --minify --bundle --sourcemap --outdir=dist ./worker",
     "deploy": "npm run build && wrangler publish",
     "act": "act compile-mdx -j compile --secret-file .env"
   },
