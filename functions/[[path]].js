@@ -14,6 +14,5 @@ const handleRequest = createPagesFunctionHandler({
 });
 
 export function onRequest(context) {
-  console.log("CONTEXT IN PATH", context);
   return handleRequest(context);
 }

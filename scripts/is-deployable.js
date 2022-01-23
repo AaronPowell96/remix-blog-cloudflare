@@ -3,7 +3,7 @@ const { getChangedFiles, fetchJson } = require("./get-changed-files");
 const [currentCommitSha] = process.argv.slice(2);
 async function go() {
   const buildInfo = await fetchJson(
-    "http://localhost:8788/build/info.json"
+    "https://remix-blog-cloudflare.pages.dev/build/info.json"
   );
   const compareCommitSha = buildInfo?.commit?.sha || "";
   const changedFiles = await getChangedFiles(

@@ -8,10 +8,10 @@
     "build": "cross-env NODE_ENV=production remix build && node ./scripts/generate-build-info.js",
     "dev": "cross-env NODE_ENV=development run-p dev:* content:watch",
     "dev:remix": "remix watch",
-    "dev:wrangler": "wrangler pages dev ./public --kv CONTENT --watch ./build",
+    "dev:wrangler": "wrangler pages dev ./public --kv CONTENT --kv-persist --watch ./build",
     "start": "npm run dev:wrangler",
     "postinstall": "remix setup cloudflare-pages && cd scripts/mdx && npm install",
-    "content:watch": "cross-env node ./scripts/watch-content.js --kv CONTENT",
+    "content:watch": "cross-env node ./scripts/watch-content.js --kv CONTENT --kv-persist",
     "deploy": "npm run build && wrangler publish",
     "act": "act compile-mdx -j compile --secret-file .env"
   },
