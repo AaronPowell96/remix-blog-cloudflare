@@ -6,12 +6,12 @@ const [currentCommitSha] = process.argv.slice(2);
 
 async function go() {
   const shaInfo = await fetchJson(
-    "https://remix-blog-cloudflare.pages.dev/refresh-commit-sha.json"
+    "http://localhost:8788/refresh-commit-sha.json"
   );
   let compareSha = shaInfo?.sha;
   if (!compareSha) {
     const buildInfo = await fetchJson(
-      "https://remix-blog-cloudflare.pages.dev/build/info.json"
+      "http://localhost:8788/build/info.json"
     );
     compareSha = buildInfo.commit.sha;
   }

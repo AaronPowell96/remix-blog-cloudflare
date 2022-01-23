@@ -9,14 +9,13 @@ const { getChangedFiles, fetchJson } = require("./get-changed-files");
 const [currentCommitSha] = process.argv.slice(2);
 async function go() {
   const buildInfo = await fetchJson(
-    "https://remix-blog-cloudflare.pages.dev/get-content-sha"
+    "https://remix-blog-cloudflare.pages.dev/api/get-content-sha"
   );
   const compareCommitSha = buildInfo?.commit?.sha || "";
   let changedFiles = [];
   if (compareCommitSha) {
     changedFiles =
       (await getChangedFiles(currentCommitSha, compareCommitSha)) ?? [];
-    console.error("API URL", process.env.API_URL);
     console.error("Determining whether the changed files are content", {
       currentCommitSha,
       compareCommitSha,

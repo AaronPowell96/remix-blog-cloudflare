@@ -99,7 +99,7 @@ import { Command } from "commander/esm.mjs";
 
     console.error("MDX NODE ENV", process.env.NODE_ENV);
     const response = await fetch(
-      `${process.env.API_URL}/post-content`,
+      `http://localhost:8788/api/post-content`,
       {
         method: "post",
         body: JSON.stringify({

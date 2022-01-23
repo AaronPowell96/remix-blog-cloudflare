@@ -3,7 +3,7 @@ import { ActionFunction, json } from "remix";
 declare var POST_API_KEY: string;
 
 export const action: ActionFunction = async ({ request, context }) => {
-  const {CONTENT} = context
+  const {CONTENT} = context.env
   try {
     // const key = request.headers.get("Authorization");
     // if (key !== `Bearer ${POST_API_KEY}`) {
