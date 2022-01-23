@@ -1,4 +1,4 @@
-name = "aar"
+name = ""
 type = "javascript"
 compatibility_date = "2021-12-06"
 
@@ -7,9 +7,10 @@ account_id = "b6eea3288d32ee67f535ce4e6fe9dfef"
 route = ""
 workers_dev = true
 
-kv_namespaces = [
-  { binding = "CONTENT", id = "c89209108caa478ab46af72f8db8a17f" }
-]
+[[kv_namespaces]]
+binding = "CONTENT"
+preview_id = "c89209108caa478ab46af72f8db8a17f"
+id = "c89209108caa478ab46af72f8db8a17f"
 
 [site]
 bucket = "./public"

@@ -1,7 +1,6 @@
 const chokidar = require("chokidar");
 const fs = require("fs");
 const exec = require("util").promisify(require("child_process").exec);
-
 const cacheFilePath = "./content/.cache.json";
 const force = true;
 
@@ -11,6 +10,7 @@ const force = true;
 
 async function main() {
   // read from cache
+
   let cache = {};
   if (fs.existsSync(cacheFilePath)) {
     cache = JSON.parse(fs.readFileSync(cacheFilePath));
@@ -18,8 +18,9 @@ async function main() {
   try {
     chokidar.watch("./content").on("all", async (event, path) => {
       if (event === "addDir") return;
-
+      console.log("listening", path);
       const { match, dir, file } = validContentPath(path);
+      console.log(match, dir, file);
       if (!match) return;
 
       console.log({ event, path, dir, file });
@@ -84,12 +85,13 @@ async function doCompile(path) {
 }
 
 function validContentPath(contentPath) {
+  const _contentPath = contentPath.replaceAll("\\", "/");
   const match = /\/?(?<dir>content\/(?:.*))\/(?<file>[^.]+\.mdx)$/gm.exec(
-    contentPath
+    _contentPath
   );
   if (!match) return { match: false };
   const { dir, file } = match.groups;
-  return { match: true, dir, file };
+  return { match: true, dir: dir.replaceAll("/", "\\"), file };
 }
 
 function parseSeries(path) {

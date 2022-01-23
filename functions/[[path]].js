@@ -5,10 +5,15 @@ import * as build from "../build";
 
 const handleRequest = createPagesFunctionHandler({
   build,
+  getLoadContext(context) {
+    // read the env from the Cloudflare context and pass it to remix `context`
+    return {
+      env: context.env,
+    };
+  },
 });
 
 export function onRequest(context) {
-  console.log("context", context.env);
-  console.log(handleRequest(context));
+  console.log("CONTEXT IN PATH", context);
   return handleRequest(context);
 }

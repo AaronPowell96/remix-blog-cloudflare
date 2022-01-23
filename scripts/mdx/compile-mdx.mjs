@@ -24,10 +24,10 @@ import { Command } from "commander/esm.mjs";
 
   program.parse(process.argv);
   const options = program.opts();
-  if (!process.env.API_URL) {
-    console.error("missing API_URL");
-    process.exit(1);
-  }
+  // if (!process.env.API_URL) {
+  //   console.error("missing API_URL");
+  //   process.exit(1);
+  // }
 
   const rootPath = options.root;
   const mdxPaths = options.file;
@@ -97,20 +97,24 @@ import { Command } from "commander/esm.mjs";
       .update(frontmatter + code)
       .digest("hex");
 
-    const response = await fetch(`${process.env.API_URL}/post-content`, {
-      method: "post",
-      body: JSON.stringify({
-        slug,
-        hash,
-        frontmatter,
-        series,
-        html,
-        code: hasComponents ? code : undefined,
-      }),
-      // headers: {
-      //   authorization: `Bearer ${process.env.POST_API_KEY}`,
-      // },
-    });
+    console.error("MDX NODE ENV", process.env.NODE_ENV);
+    const response = await fetch(
+      `${process.env.API_URL}/post-content`,
+      {
+        method: "post",
+        body: JSON.stringify({
+          slug,
+          hash,
+          frontmatter,
+          series,
+          html,
+          code: hasComponents ? code : undefined,
+        }),
+        // headers: {
+        //   authorization: `Bearer ${process.env.POST_API_KEY}`,
+        // },
+      }
+    );
     if (!response.ok) {
       const body = await response.text();
       results[mdxPath] = {
