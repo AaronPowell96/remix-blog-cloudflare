@@ -30,7 +30,7 @@ async function go() {
     commit: await getCommit(),
   };
 
-  const response = await fetch(`http://localhost:8788/api/update-content-sha`, {
+  const response = await fetch(`${process.env.API_URL || "http://localhost:8788/api"}/update-content-sha`, {
     method: "post",
     body: JSON.stringify(buildInfo),
     // headers: {
