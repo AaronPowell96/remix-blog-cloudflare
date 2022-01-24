@@ -26,6 +26,16 @@ export default function Index() {
             Remix Docs
           </a>
         </li>
+        <li>
+          <a href="./blog/hello" rel="noreferrer">
+            Blog hello
+          </a>
+        </li>
+        <li>
+          <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
+            Remix Docs
+          </a>
+        </li>
       </ul>
     </div>
   );

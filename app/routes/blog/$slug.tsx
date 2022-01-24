@@ -34,12 +34,12 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => loaderHeaders;
 
 export const loader: LoaderFunction = async ({request, context, params}) => {
   const {CONTENT} = context.env
-  console.error("CONTENT IN SLUG LOADER", CONTENT)
+  console.error("CONTENT IN SLUG LOADER", params)
   const slug = params['slug']
   if (slug === undefined) {
     throw new Response("Not Found", { status: 404 });
   }
-  
+  console.log("SLUGGGGGGGGG", slug)
   const data = await CONTENT.get(`blog/${slug}`, "json");
   console.log("DATA IN SLUG LOADER", data)
   if (data === undefined) {

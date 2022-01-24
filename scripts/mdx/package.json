@@ -4,7 +4,7 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "compile": "node ./compile-mdx.mjs --root ../../ --json --file"
+    "compile": "node ./compile-mdx.js --root ../../ --json --file"
   },
   "keywords": [],
   "author": "Michael J. Carter <kiliman@gmail.com> (https://kiliman.dev/)",

@@ -1,10 +1,12 @@
 const chokidar = require("chokidar");
 const fs = require("fs");
+const path = require("path");
 const exec = require("util").promisify(require("child_process").exec);
 const cacheFilePath = "./content/.cache.json";
 const force = true;
 
 (async function () {
+  console.log("WATCHING CONTENT CHANGED")
   await main();
 })();
 
@@ -77,7 +79,7 @@ function updateCache(cache, path, entry) {
 
 async function doCompile(path) {
   console.log(`🛠 Compiling ${path}...`);
-  const command = `cd scripts/mdx && node compile-mdx.mjs --root ../.. --json --file ${path}`;
+  const command = `cd scripts/mdx && node compile-mdx.js --root ../.. --json --file ${path}`;
   let out = await exec(command).catch((e) => {
     console.error(e);
   });
@@ -85,13 +87,13 @@ async function doCompile(path) {
 }
 
 function validContentPath(contentPath) {
-  const _contentPath = contentPath.replaceAll("\\", "/");
+  const _contentPath = contentPath.replaceAll(path.sep, "/");
   const match = /\/?(?<dir>content\/(?:.*))\/(?<file>[^.]+\.mdx)$/gm.exec(
     _contentPath
   );
   if (!match) return { match: false };
   const { dir, file } = match.groups;
-  return { match: true, dir: dir.replaceAll("/", "\\"), file };
+  return { match: true, dir: dir.replaceAll("/", path.sep), file };
 }
 
 function parseSeries(path) {

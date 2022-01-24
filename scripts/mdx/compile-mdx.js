@@ -35,13 +35,14 @@ import { Command } from "commander/esm.mjs";
   let hasError = false;
   const processed = {};
   const seriesList = {};
+  const contentData = {};
   for (let mdxPath of mdxPaths) {
     console.error(`Compiling ${mdxPath}...`);
     const fullPath = path.join(rootPath, mdxPath);
     if (processed[mdxPath]) continue;
     processed[mdxPath] = true;
-
-    const parts = mdxPath.split("/");
+    const parts = mdxPath.split(path.sep);
+    console.error("MDX PATH PARTS", parts)
     const slug = parts.slice(1).join("/").replace(".mdx", "");
     let series = undefined;
     if (parts.length > 3) {
@@ -98,6 +99,15 @@ import { Command } from "commander/esm.mjs";
       .digest("hex");
 
     console.error("MDX NODE ENV", process.env.NODE_ENV);
+    contentData[mdxPath] = JSON.stringify({
+      slug,
+      hash,
+      frontmatter,
+      series,
+      html,
+      code: hasComponents ? code : undefined,
+    }, null, 2)
+
     const response = await fetch(
       `http://localhost:8788/api/post-content`,
       {
@@ -131,6 +141,16 @@ import { Command } from "commander/esm.mjs";
       hash,
     };
   }
+
+  const KVDir = "../../.mf/kv"
+  if (!fs.existsSync(KVDir)) {
+    fs.mkdirSync(KVDir, {
+      recursive: true
+    });
+  }
+
+  // path.join(KVDir, 'CONTENT.json')
+  // fs.writeFileSync("../../.mf/kv/CONTENT.json", JSON.stringify(contentData, null, 2))
   if (options.json) {
     console.log(JSON.stringify(results, null, 2));
   }
