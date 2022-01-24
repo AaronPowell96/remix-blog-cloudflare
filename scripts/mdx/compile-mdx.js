@@ -112,6 +112,7 @@ import { Command } from "commander/esm.mjs";
       code: hasComponents ? code : undefined,
     }, null, 2)
     
+    if(process.env.NODE_ENV === "development"){
     let retry = 0;
     let exists = false;
     const isLocalHostRunning = async () => {
@@ -129,8 +130,9 @@ import { Command } from "commander/esm.mjs";
       process.exit(1);
       }
     }
+  }
     const response = await fetch(
-      `http://localhost:8788/api/post-content`,
+      `${process?.env?.API_URL}/post-content`,
       {
         method: "post",
         body: JSON.stringify({
