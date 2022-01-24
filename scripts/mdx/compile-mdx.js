@@ -125,7 +125,7 @@ import { Command } from "commander/esm.mjs";
       retry++;
       
       if(retry > 5){
-      process.stderr("SHUTTING DOWN: Cannot connect to http://localhost:8788/ after 5 retrys.")
+      console.error("SHUTTING DOWN: Cannot connect to http://localhost:8788/ after 5 retrys.")
       process.exit(1);
       }
     }
