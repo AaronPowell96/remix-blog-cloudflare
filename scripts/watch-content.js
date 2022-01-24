@@ -2,7 +2,7 @@ const chokidar = require("chokidar");
 const fs = require("fs");
 const path = require("path");
 const exec = require("util").promisify(require("child_process").exec);
-const cacheFilePath = "./content/.cache.json";
+const cacheFilePath = "./app/.cache.json";
 const force = true;
 
 (async function () {
@@ -18,23 +18,22 @@ async function main() {
     cache = JSON.parse(fs.readFileSync(cacheFilePath));
   }
   try {
-    chokidar.watch("./content").on("all", async (event, path) => {
+    chokidar.watch("./content").on("all", async (event, contentPath) => {
       if (event === "addDir") return;
-      console.log("listening", path);
-      const { match, dir, file } = validContentPath(path);
+      console.log("Listening to:", contentPath);
+      const { match, dir, file } = validContentPath(contentPath);
       console.log(match, dir, file);
       if (!match) return;
 
-      console.log({ event, path, dir, file });
-      const lastModified = fs.statSync(path).mtimeMs;
-      // check for changes
-      if (!force && cache[path] && cache[path] === lastModified) {
-        console.log(`${path} has not changed`);
+      const lastModified = fs.statSync(contentPath).mtimeMs;
+      // Check for changes
+      if (cache[contentPath] && cache[contentPath].lastModified === lastModified) {
+        // Early return if no change.
         return;
       }
 
       if (file === "_series.mdx") {
-        const { frontmatter, filelist } = await parseSeries(path);
+        const { frontmatter, filelist } = await parseSeries(contentPath);
         console.log({ frontmatter, filelist });
         updateCache(cache, dir, {
           type: "series",
@@ -45,7 +44,7 @@ async function main() {
         return;
       }
 
-      const parts = dir.split("/");
+      const parts = dir.split(path.sep);
       let series = undefined;
       if (parts.length >= 3) {
         series = parts.slice(0, 3).join("/");
@@ -53,15 +52,15 @@ async function main() {
           console.log(`Part of series ${series}`);
         }
         if (file === "index.mdx") {
-          path = dir; // just compile the directory
+          contentPath = dir; // just compile the directory
         }
       }
 
-      console.log(`compling ${path}`);
-      const results = await doCompile(path);
-      const { hash } = results[path];
+      console.log(`Compling: ${contentPath}`);
+      const results = await doCompile(contentPath);
+      const { hash } = results[contentPath];
       console.log(results);
-      updateCache(cache, path, {
+      updateCache(cache, contentPath, {
         series,
         lastModified,
         hash,
@@ -77,9 +76,9 @@ function updateCache(cache, path, entry) {
   fs.writeFileSync(cacheFilePath, JSON.stringify(cache, null, 2));
 }
 
-async function doCompile(path) {
-  console.log(`🛠 Compiling ${path}...`);
-  const command = `cd scripts/mdx && node compile-mdx.js --root ../.. --json --file ${path}`;
+async function doCompile(contentPath) {
+  console.log(`🛠 Compiling ${contentPath}...`);
+  const command = `cd scripts/mdx && node compile-mdx.js --root ../.. --json --file ${contentPath}`;
   let out = await exec(command).catch((e) => {
     console.error(e);
   });

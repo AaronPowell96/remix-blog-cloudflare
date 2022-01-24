@@ -40,8 +40,7 @@ export const loader: LoaderFunction = async ({request, context, params}) => {
     throw new Response("Not Found", { status: 404 });
   }
   console.log("SLUGGGGGGGGG", slug)
-  console.log("TESTTTT", context.env.TEST)
-  const data = await CONTENT.get(`blog/${slug}`, "json");
+  const data = await CONTENT.get(`aaa/${slug}`, "json");
   console.log("DATA IN SLUG LOADER", data)
   if (data === undefined) {
     throw new Response("Not Found", { status: 404 });
@@ -59,7 +58,6 @@ export const loader: LoaderFunction = async ({request, context, params}) => {
       frontmatter,
       html,
       code,
-      env: context.env
     },
     {
       headers: {
@@ -87,15 +85,14 @@ export let meta: MetaFunction = ({ data }) => {
   };
 };
 export default function Post() {
-  const { html, frontmatter, code, env } = useLoaderData();
+  const { html, frontmatter, code } = useLoaderData();
   let Component = null;
   if (typeof window !== "undefined" && code) {
     Component = getMDXComponent(code);
   }
-  console.log("test", env)
+  console.log("test")
   return (
     <>
-      <span>{env ? env.TEST: "no env"}</span>
       {Component ? (
         <main className="prose dark:prose-invert prose-slate">
           <Component />

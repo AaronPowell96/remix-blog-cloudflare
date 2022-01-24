@@ -1,6 +1,12 @@
 node_modules
 .env
-/.cache
+
+# Locally built project files.
 /build
 /public/build
-/content/.cache.json
+
+# Local caching files
+.cache
+.cache.json
+
+.mf/*

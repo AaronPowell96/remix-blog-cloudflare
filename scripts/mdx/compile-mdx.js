@@ -3,6 +3,7 @@ import * as fs from "fs";
 import * as fsp from "fs/promises";
 import * as path from "path";
 import * as crypto from "crypto";
+import urlExist from 'url-exist';
 import fetch from "node-fetch";
 import * as React from "react";
 import { renderToString } from "react-dom/server.js";
@@ -17,7 +18,7 @@ import { Command } from "commander/esm.mjs";
   program
     .requiredOption(
       "-R, --root <path>",
-      "Root path (content is relative to root"
+      "Root path content is relative to root"
     )
     .option("-f, --file [files...]", "Files to compile")
     .option("-j, --json", "Output JSON");
@@ -36,6 +37,7 @@ import { Command } from "commander/esm.mjs";
   const processed = {};
   const seriesList = {};
   const contentData = {};
+ 
   for (let mdxPath of mdxPaths) {
     console.error(`Compiling ${mdxPath}...`);
     const fullPath = path.join(rootPath, mdxPath);
@@ -99,6 +101,8 @@ import { Command } from "commander/esm.mjs";
       .digest("hex");
 
     console.error("MDX NODE ENV", process.env.NODE_ENV);
+
+    
     contentData[mdxPath] = JSON.stringify({
       slug,
       hash,
@@ -107,7 +111,24 @@ import { Command } from "commander/esm.mjs";
       html,
       code: hasComponents ? code : undefined,
     }, null, 2)
-
+    
+    let retry = 0;
+    let exists = false;
+    const isLocalHostRunning = async () => {
+      exists = await urlExist('http://localhost:8788/');
+    }
+    // Possible race condition? Sleep or somehow await for it to be running (Loop check its up?)
+    while(!exists){
+      // Sleep one second give localhost a chance to spinup.
+      isLocalHostRunning();
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      retry++;
+      
+      if(retry > 5){
+      process.stderr("SHUTTING DOWN: Cannot connect to http://localhost:8788/ after 5 retrys.")
+      process.exit(1);
+      }
+    }
     const response = await fetch(
       `http://localhost:8788/api/post-content`,
       {
@@ -141,7 +162,7 @@ import { Command } from "commander/esm.mjs";
       hash,
     };
   }
-
+  // Create miniflare KV directory if it doesn't exist.`
   const KVDir = "../../.mf/kv"
   if (!fs.existsSync(KVDir)) {
     fs.mkdirSync(KVDir, {
