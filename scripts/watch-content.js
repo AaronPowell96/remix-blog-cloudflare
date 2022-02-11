@@ -2,17 +2,17 @@ const chokidar = require("chokidar");
 const fs = require("fs");
 const path = require("path");
 const exec = require("util").promisify(require("child_process").exec);
-const cacheFilePath = "./app/.cache.json";
-const force = true;
+// Local files for handling KV storage and cache.
+// cache.json is inside app to trigger Hot Module Reloading on changes.
+const cacheFilePath = `.${path.sep}app${path.sep}.cache.json`;
+const miniflareKVPath = `..${path.sep}.mf${path.sep}kv`;
 
 (async function () {
-  console.log("WATCHING CONTENT CHANGED")
   await main();
 })();
 
 async function main() {
   // read from cache
-
   let cache = {};
   if (fs.existsSync(cacheFilePath)) {
     cache = JSON.parse(fs.readFileSync(cacheFilePath));
@@ -22,49 +22,21 @@ async function main() {
       if (event === "addDir") return;
       console.log("Listening to:", contentPath);
       const { match, dir, file } = validContentPath(contentPath);
-      console.log(match, dir, file);
       if (!match) return;
-
       const lastModified = fs.statSync(contentPath).mtimeMs;
-      // Check for changes
-      if (cache[contentPath] && cache[contentPath].lastModified === lastModified) {
+      // If local KV file doesn't exist, or the cached content has changed. Compile the mdx file.
+      if (fs.existsSync(`${miniflareKVPath}${path.sep}${contentPath}`) && cache[contentPath] && cache[contentPath].lastModified === lastModified) {
         // Early return if no change.
         return;
       }
-
-      if (file === "_series.mdx") {
-        const { frontmatter, filelist } = await parseSeries(contentPath);
-        console.log({ frontmatter, filelist });
-        updateCache(cache, dir, {
-          type: "series",
-          frontmatter,
-          filelist,
-          lastModified,
-        });
-        return;
-      }
-
-      const parts = dir.split(path.sep);
-      let series = undefined;
-      if (parts.length >= 3) {
-        series = parts.slice(0, 3).join("/");
-        if (cache[series]?.type === "series") {
-          console.log(`Part of series ${series}`);
-        }
-        if (file === "index.mdx") {
-          contentPath = dir; // just compile the directory
-        }
-      }
-
-      console.log(`Compling: ${contentPath}`);
+      console.time(`Time to Compile ${contentPath}`)
       const results = await doCompile(contentPath);
       const { hash } = results[contentPath];
-      console.log(results);
       updateCache(cache, contentPath, {
-        series,
         lastModified,
         hash,
       });
+      console.timeEnd(`Time to Compile ${contentPath}`)
     });
   } catch (e) {
     console.error(e);
@@ -77,8 +49,8 @@ function updateCache(cache, path, entry) {
 }
 
 async function doCompile(contentPath) {
-  console.log(`🛠 Compiling ${contentPath}...`);
-  const command = `cd scripts/mdx && node compile-mdx.js --root ../.. --json --file ${contentPath}`;
+  console.log(`Compiling ${contentPath}...`);
+  const command = `cd scripts/mdx && node compile-mdx.mjs --root ../.. --json --file ${contentPath}`;
   let out = await exec(command).catch((e) => {
     console.error(e);
   });
@@ -93,41 +65,4 @@ function validContentPath(contentPath) {
   if (!match) return { match: false };
   const { dir, file } = match.groups;
   return { match: true, dir: dir.replaceAll("/", path.sep), file };
-}
-
-function parseSeries(path) {
-  const file = fs.readFileSync(path, "utf8");
-  const lines = file.split("\n");
-  const frontmatter = {};
-  const filelist = [];
-  let state = "START";
-  for (let line of lines) {
-    line = line.trim();
-    if (!line || line.startsWith("#")) continue;
-    if (state === "START") {
-      if (line.startsWith("---")) {
-        state = "FRONTMATTER";
-      }
-    } else if (state === "FRONTMATTER") {
-      if (line.startsWith("---")) {
-        state = "CONTENT";
-      } else {
-        const { name, value } = parseLine(line);
-        frontmatter[name] = value;
-      }
-    } else if (state === "CONTENT") {
-      if (line.startsWith("---")) {
-        state = "END";
-      }
-      filelist.push(line);
-    }
-  }
-  return { frontmatter, filelist };
-}
-
-function parseLine(line) {
-  const parts = line.split(":");
-  const name = parts[0].trim();
-  const value = parts[1].trim();
-  return { name, value };
 }

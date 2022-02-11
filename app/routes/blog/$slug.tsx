@@ -9,6 +9,7 @@ import type { LoaderFunction } from "remix";
 import { getMDXComponent } from "~/utils/mdx.client";
 import customCodeCss from "~/styles/custom-code.css";
 import { siteTitle } from "~/utils/constants";
+import { MDXContent } from "~/components/MDXContent";
 
 declare var CONTENT: KVNamespace;
 
@@ -34,15 +35,11 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => loaderHeaders;
 
 export const loader: LoaderFunction = async ({request, context, params}) => {
   const {CONTENT} = context.env
-  console.error("CONTENT IN SLUG LOADER", params)
   const slug = params['slug']
   if (slug === undefined) {
     throw new Response("Not Found", { status: 404 });
   }
-  console.log("SLUGGGGGGGGG", slug)
-  console.log("TESTTTT", context.env.TEST)
   const data = await CONTENT.get(`blog/${slug}`, "json");
-  console.log("DATA IN SLUG LOADER", data)
   if (data === undefined) {
     throw new Response("Not Found", { status: 404 });
   }
@@ -64,7 +61,7 @@ export const loader: LoaderFunction = async ({request, context, params}) => {
     {
       headers: {
         // use weak etag because Cloudflare only supports
-        // srong etag on Enterprise plans :(
+        // strong etag on Enterprise plans :(
         ETag: weakHash,
         // add cache control and status for cloudflare?
         "Cache-Control": "maxage=1, s-maxage=60, stale-while-revalidate",
@@ -88,24 +85,13 @@ export let meta: MetaFunction = ({ data }) => {
 };
 export default function Post() {
   const { html, frontmatter, code, env } = useLoaderData();
-  let Component = null;
-  if (typeof window !== "undefined" && code) {
-    Component = getMDXComponent(code);
-  }
+
   console.log("test", env)
   return (
     <>
+      <MDXContent html={html} code={code}/>
       <span>{env ? env.TEST: "no env"}</span>
-      {Component ? (
-        <main className="prose dark:prose-invert prose-slate">
-          <Component />
-        </main>
-      ) : (
-        <main
-          className="prose dark:prose-invert prose-slate"
-          dangerouslySetInnerHTML={{ __html: html }}
-        />
-      )}
+      <span>hi nope</span>
     </>
   );
 }
