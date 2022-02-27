@@ -9,12 +9,13 @@ export const action: ActionFunction = async ({ request, context }) => {
     // if (key !== `Bearer ${POST_API_KEY}`) {
     //   return new Response(`Unauthorized ${key}`, { status: 401 });
     // }
-
     const data = await request.json();
-    await CONTENT.put(data.slug.toLowerCase(), JSON.stringify(data));
+    const metadata = data?.frontmatter || {};
+    console.log("dataaaaaa", data)
+    console.log("metadataaaa", metadata)
+    await CONTENT.put(data.slug.toLowerCase(), JSON.stringify(data), {metadata: {...metadata}});
     return json({ success: true });
   } catch (e) {
-    //@ts-expect-error
     return json({ message: e.message, stack: e.stack });
   }
 };

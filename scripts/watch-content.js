@@ -25,18 +25,22 @@ async function main() {
       if (!match) return;
       const lastModified = fs.statSync(contentPath).mtimeMs;
       // If local KV file doesn't exist, or the cached content has changed. Compile the mdx file.
-      if (fs.existsSync(`${miniflareKVPath}${path.sep}${contentPath}`) && cache[contentPath] && cache[contentPath].lastModified === lastModified) {
+      if (
+        fs.existsSync(`${miniflareKVPath}${path.sep}${contentPath}`) &&
+        cache[contentPath] &&
+        cache[contentPath].lastModified === lastModified
+      ) {
         // Early return if no change.
         return;
       }
-      console.time(`Time to Compile ${contentPath}`)
+      console.time(`Time to Compile ${contentPath}`);
       const results = await doCompile(contentPath);
       const { hash } = results[contentPath];
       updateCache(cache, contentPath, {
         lastModified,
         hash,
       });
-      console.timeEnd(`Time to Compile ${contentPath}`)
+      console.timeEnd(`Time to Compile ${contentPath}`);
     });
   } catch (e) {
     console.error(e);
@@ -50,7 +54,7 @@ function updateCache(cache, path, entry) {
 
 async function doCompile(contentPath) {
   console.log(`Compiling ${contentPath}...`);
-  const command = `cd scripts/mdx && node compile-mdx.mjs --root ../.. --json --file ${contentPath}`;
+  const command = `cd scripts/mdx && node compile-mdx.js --root ../.. --json --file ${contentPath}`;
   let out = await exec(command).catch((e) => {
     console.error(e);
   });

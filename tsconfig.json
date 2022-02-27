@@ -13,7 +13,8 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["./app/*"],
-      "components/*": ["./app/components/*"]
+      "components/*": ["./app/components/*"],
+      "content/*": ["./content/*"]
     },
 
     // Remix takes care of building everything in `remix build`.
