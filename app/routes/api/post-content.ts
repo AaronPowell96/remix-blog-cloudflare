@@ -13,6 +13,7 @@ export const action: ActionFunction = async ({ request, context }) => {
     const metadata = data?.frontmatter || {};
     console.log("dataaaaaa", data)
     console.log("metadataaaa", metadata)
+    // metadata.draft add draft/ in front or behind slug
     await CONTENT.put(data.slug.toLowerCase(), JSON.stringify(data), {metadata: {...metadata}});
     return json({ success: true });
   } catch (e) {

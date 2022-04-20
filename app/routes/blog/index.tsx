@@ -61,7 +61,7 @@ export default function Index() {
         <ul>
             {blogs.map(({name, metadata}) => {
                 return (
-                    <a href={name}>
+                    <a href={name} key={name}>
                     <li>
                         {metadata.title}
                     </li>

@@ -10,7 +10,7 @@ async function getCommit() {
   // if (!commit) return { sha: "" };
   try {
     const res = await fetch(
-      `https://api.github.com/repos/aaronpowell96/remix-blog-cloudflare/commits`
+      `https://api.github.com/repos/${process.env.GITHUB_REPO}/commits`
     );
     const _data = await res.json();
     const data = _data[0];

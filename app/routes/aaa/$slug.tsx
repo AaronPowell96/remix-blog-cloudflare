@@ -42,7 +42,7 @@ export const loader: LoaderFunction = async ({request, context, params}) => {
   if (data === undefined) {
     throw new Response("Not Found", { status: 404 });
   }
-  const { frontmatter, html, code, hash } = data as BlogContentType;
+  const { frontmatter, html, code, hash, Component } = data as BlogContentType;
   const weakHash = `W/"${hash}"`;
   const etag = request.headers.get("If-None-Match");
   if (etag === weakHash) {
@@ -55,6 +55,7 @@ export const loader: LoaderFunction = async ({request, context, params}) => {
       frontmatter,
       html,
       code,
+      AComponent: Component
     },
     {
       headers: {
@@ -82,12 +83,12 @@ export let meta: MetaFunction = ({ data }) => {
   };
 };
 export default function Post() {
-  const { html, frontmatter, code } = useLoaderData();
+  const { html, frontmatter, code, AComponent } = useLoaderData();
   let Component = null;
   if (typeof window !== "undefined" && code) {
     Component = getMDXComponent(code);
   }
-  console.log("test")
+  console.log("test", AComponent)
   return (
     <>
       {Component ? (

@@ -8,7 +8,7 @@ async function getCommit() {
   if (!commit) return { sha: "" };
   try {
     const res = await fetch(
-      `https://api.github.com/repos/aaronpowell96/remix-blog-cloudflare/commits/${commit}`
+      `https://api.github.com/repos/${process.env.GITHUB_REPO}/commits/${commit}`
     );
     const data = await res.json();
     return {

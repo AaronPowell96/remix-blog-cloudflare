@@ -10,6 +10,7 @@ import { getMDXComponent } from "~/utils/mdx.client";
 import customCodeCss from "~/styles/custom-code.css";
 import { siteTitle } from "~/utils/constants";
 import { MDXContent } from "~/components/MDXContent";
+import { ReactNode } from "react";
 
 declare var CONTENT: KVNamespace;
 
@@ -27,8 +28,9 @@ export const links: LinksFunction = () => [
 type BlogContentType = {
   frontmatter: { [key: string]: any };
   html: string;
-  code?: string;
+  code: string;
   hash?: string;
+  Component: ReactNode
 };
 
 export const headers: HeadersFunction = ({ loaderHeaders }) => loaderHeaders;
@@ -43,7 +45,7 @@ export const loader: LoaderFunction = async ({request, context, params}) => {
   if (data === undefined) {
     throw new Response("Not Found", { status: 404 });
   }
-  const { frontmatter, html, code, hash } = data as BlogContentType;
+  const { frontmatter, html, code, hash} = data as BlogContentType;
   const weakHash = `W/"${hash}"`;
   const etag = request.headers.get("If-None-Match");
   if (etag === weakHash) {
@@ -56,7 +58,9 @@ export const loader: LoaderFunction = async ({request, context, params}) => {
       frontmatter,
       html,
       code,
-      env: context.env
+      // Component,
+      env: context.env,
+      context: context
     },
     {
       headers: {
@@ -79,16 +83,25 @@ export let meta: MetaFunction = ({ data }) => {
     description = data.frontmatter.description;
   }
   return {
-    title,
+    title: "aaaaa",
     description,
+    "twitter:card": "summary_large_image",
+    ...data?.frontmatter,
+    "og:title": data?.frontmatter?.['og:title'] || title,
+    "og:description": data?.frontmatter?.['og:description'] || description,
+    // allow for transform overrides in og:image as string concat onto end as they override.
+    "og:image": data?.frontmatter?.['og:image']
+
   };
 };
 export default function Post() {
-  const { html, frontmatter, code, env } = useLoaderData();
-
-  console.log("test", env)
+  const { html, frontmatter, code, env, context } = useLoaderData();
+  // const Component = getMDXComponent(code || '');
+  console.log("Post", frontmatter);
+  console.log("test", env, context);
   return (
     <>
+      {/* <Component/> */}
       <MDXContent html={html} code={code}/>
       <span>{env ? env.TEST: "no env"}</span>
       <span>hi nope</span>

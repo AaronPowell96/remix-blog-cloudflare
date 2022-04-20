@@ -5,7 +5,7 @@ const exec = require("util").promisify(require("child_process").exec);
 // Local files for handling KV storage and cache.
 // cache.json is inside app to trigger Hot Module Reloading on changes.
 const cacheFilePath = `.${path.sep}app${path.sep}.cache.json`;
-const miniflareKVPath = `..${path.sep}.mf${path.sep}kv`;
+const miniflareKVPath = `${process.cwd()}${path.sep}.mf${path.sep}kv`;
 
 (async function () {
   await main();
@@ -25,8 +25,9 @@ async function main() {
       if (!match) return;
       const lastModified = fs.statSync(contentPath).mtimeMs;
       // If local KV file doesn't exist, or the cached content has changed. Compile the mdx file.
+      console.log("LAST MODIFIED", cache[contentPath].lastModified, lastModified, `${miniflareKVPath}${path.sep}${contentPath.split(".")[0]}`, fs.existsSync(`${miniflareKVPath}${path.sep}${contentPath.split(".")[0]}`));
       if (
-        fs.existsSync(`${miniflareKVPath}${path.sep}${contentPath}`) &&
+        fs.existsSync(`${miniflareKVPath}${path.sep}${contentPath.split(".")[0]}`) &&
         cache[contentPath] &&
         cache[contentPath].lastModified === lastModified
       ) {
@@ -56,8 +57,13 @@ async function doCompile(contentPath) {
   console.log(`Compiling ${contentPath}...`);
   const command = `cd scripts/mdx && node compile-mdx.js --root ../.. --json --file ${contentPath}`;
   let out = await exec(command).catch((e) => {
-    console.error(e);
+    return e
   });
+  if(out.stderr){
+    // throw Error(out.stderr);
+    console.error(out.stderr);
+    return;
+  }
   return JSON.parse(out.stdout);
 }
 

@@ -1,12 +1,18 @@
 ---
-title: Hello hi!
-published: 2021-02-13
-description: This is a simple Hello World blog post
+title: Hello World - Remix Blog
+published: 2021-04-13
+description: Remix, Cloudinary, Cloudflare blog
+og:image: images/abc.svg
+# image:transforms: f_png
+#og:title: title is used by default if not defined
+#og:description: description is used by default if not defined
+# image:transforms: co_yellow,g_north - comma separated list of cloudinary transforms
+# image:disable_text: true - disable title text in the og:image
 ---
-import {Test} from "../../app/components/Test.tsx"
+import {Test} from "components/Test.tsx"
 
-# 000
-a
+# Test
+
 asdasdasdsaeesdfd
 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi non quis
 asd?
@@ -14,8 +20,14 @@ asd?
 <Test/>
 hi
 
- ![Tux, the Linux malscot](h_80,w_80/images/abc.svg)
- ![Me](h_80,w_80/images/test.jpg)
+ ![aaa](images/abc.svg)
+ <img src='images/abc.svg' alt="Tux, the Linux mascot" height="100" width="100" />
+
+{/* ![Me](h_800,w_800/images/test.jpg)
+ ![Tux, the Linux malscot](images/abc.svg) */}
+
+<img src="h_800,w_800/b_rgb:FEB61FC2,co_yellow,l_text:Arial_100:oooo by Cloudinary/images/test.jpg" alt="Tux, the Linux mascot" />
+
 ```ts
 // comm
 console.log("nope lol");
