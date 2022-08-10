@@ -4,9 +4,9 @@ import * as build from "../build";
 
 const handleRequest = createPagesFunctionHandler({
   build,
+  mode: process.env.NODE_ENV,
   getLoadContext(context) {
     // read the env from the Cloudflare context and pass it to remix `context`
-    console.log("----------------------------context", context.env)
     return {
       env: context.env,
     };

@@ -4,10 +4,10 @@ const fs = require("fs");
 // eslint-disable-next-line import/no-extraneous-dependencies
 const fetch = require("node-fetch");
 
-// const commit = process.env.COMMIT_SHA;
+const commit = process.env.COMMIT_SHA;
 
 async function getCommit() {
-  // if (!commit) return { sha: "" };
+  if (!commit) return { sha: "" };
   try {
     const res = await fetch(
       `https://api.github.com/repos/${process.env.GITHUB_REPO}/commits`

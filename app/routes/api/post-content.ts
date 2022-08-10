@@ -11,8 +11,8 @@ export const action: ActionFunction = async ({ request, context }) => {
     // }
     const data = await request.json();
     const metadata = data?.frontmatter || {};
-    console.log("dataaaaaa", data)
-    console.log("metadataaaa", metadata)
+    // console.log("dataaaaaa", data)
+    // console.log("metadataaaa", metadata)
     // metadata.draft add draft/ in front or behind slug
     await CONTENT.put(data.slug.toLowerCase(), JSON.stringify(data), {metadata: {...metadata}});
     return json({ success: true });

@@ -8,6 +8,7 @@ node_modules
 # Local caching files
 .cache
 .cache.json
+wrangler-local-state/*
 
 .mf/*
 .DS_Store

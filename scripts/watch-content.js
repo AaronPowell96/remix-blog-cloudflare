@@ -24,10 +24,8 @@ async function main() {
       const { match, dir, file } = validContentPath(contentPath);
       if (!match) return;
       const lastModified = fs.statSync(contentPath).mtimeMs;
-      // If local KV file doesn't exist, or the cached content has changed. Compile the mdx file.
-      console.log("LAST MODIFIED", cache[contentPath].lastModified, lastModified, `${miniflareKVPath}${path.sep}${contentPath.split(".")[0]}`, fs.existsSync(`${miniflareKVPath}${path.sep}${contentPath.split(".")[0]}`));
+      // IF cached content has changed. Compile the mdx file.
       if (
-        fs.existsSync(`${miniflareKVPath}${path.sep}${contentPath.split(".")[0]}`) &&
         cache[contentPath] &&
         cache[contentPath].lastModified === lastModified
       ) {
@@ -60,7 +58,6 @@ async function doCompile(contentPath) {
     return e
   });
   if(out.stderr){
-    // throw Error(out.stderr);
     console.error(out.stderr);
     return;
   }

@@ -8,12 +8,12 @@
     "build": "cross-env NODE_ENV=production remix build && node ./scripts/generate-build-info.js",
     "dev": "cross-env NODE_ENV=development run-p dev:* content:watch",
     "dev:remix": "remix watch",
-    "dev:wrangler": "wrangler pages dev ./public --kv CONTENT --kv-persist --port 8788",
+    "dev:wrangler": "wrangler pages dev ./public --kv CONTENT --experimental-enable-local-persistence --port 8788",
     "start": "npm run dev",
     "postinstall": "remix setup cloudflare-pages && cd scripts/mdx && npm install",
     "content:watch": "cross-env node ./scripts/watch-content.js",
     "deploy": "npm run build && wrangler publish",
-    "act": "act compile-mdx -j compile --secret-file .env"
+    "act": "act compile-mdx -j compile --secret-file .env --container-architecture linux/amd64"
   },
   "dependencies": {
     "@remix-run/cloudflare-pages": "^1.1.3",
@@ -33,11 +33,10 @@
     "@types/react": "^17.0.24",
     "@types/react-dom": "^17.0.9",
     "cross-env": "^7.0.3",
-    "esbuild": "0.13.14",
     "node-fetch": "2.6",
     "npm-run-all": "^4.1.5",
     "typescript": "^4.1.2",
-    "wrangler": "alpha"
+    "wrangler": "^2.0.24"
   },
   "engines": {
     "node": ">=16.7"

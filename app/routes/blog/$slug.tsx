@@ -37,8 +37,9 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => loaderHeaders;
 
 export const loader: LoaderFunction = async ({request, context, params}) => {
   const {CONTENT} = context.env
+  console.log("content", context)
   const slug = params['slug']
-  if (slug === undefined) {
+  if (slug === undefined || !CONTENT.get(`blog/${slug}`)) {
     throw new Response("Not Found", { status: 404 });
   }
   const data = await CONTENT.get(`blog/${slug}`, "json");
@@ -97,14 +98,21 @@ export let meta: MetaFunction = ({ data }) => {
 export default function Post() {
   const { html, frontmatter, code, env, context } = useLoaderData();
   // const Component = getMDXComponent(code || '');
-  console.log("Post", frontmatter);
-  console.log("test", env, context);
   return (
     <>
       {/* <Component/> */}
       <MDXContent html={html} code={code}/>
-      <span>{env ? env.TEST: "no env"}</span>
-      <span>hi nope</span>
+      <p>{env ? JSON.stringify(env, null, 2): "no env"}</p>
+      <p>-----------------------</p>
+      <p>-----------------------</p>
+      <p>-----------------------</p>
+      <p>-----------------------</p>
+      <p>-----------------------</p>
+      <p>-----------------------</p>
+      <p>-----------------------</p>
+      <p>-----------------------</p>
+      <p>-----------------------</p>
+      <p>hi nopeeeeeee {JSON.stringify(context, null, 2)}</p>
     </>
   );
 }

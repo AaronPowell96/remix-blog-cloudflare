@@ -45,13 +45,6 @@ const isLocalHostRunning = async () => {
     throw Error("CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET, CLOUDINARY_CLOUD_NAME env vars are required")
   }
 
-  // Create miniflare KV directory if it doesn't exist.
-  const KVDir = path.join(rootPath, ".mf/kv");
-  if (!fs.existsSync(KVDir)) {
-    fs.mkdirSync(KVDir, {
-      recursive: true,
-    });
-  }
 
   if (process.env.NODE_ENV === "development") {
     let retry = 0;
