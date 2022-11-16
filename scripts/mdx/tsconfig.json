@@ -1,0 +1,13 @@
+{
+  "include": ["**/*.ts", "**/*.tsx", "**/*.mjs", "compile-mdx.js"],
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "lib": ["es2020"],
+    "module": "ES2020",
+    "target": "ES2020",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
+  }
+}
