@@ -29,7 +29,7 @@ jobs:
           echo "DEPLOYABLE={$(node ./scripts/is-deployable.js ${{github.sha}})}" >> $GITHUB_OUTPUT
       - name: ❓ Deployable
         run: >-
-          echo "DEPLOYABLE: ${{ env.DEPLOYABLE }}"
+          echo "DEPLOYABLE: ${{ steps.deploy_changes.outputs.DEPLOYABLE }}"
 
       - name: 🔎 Determine content changes
         id: content_changes
@@ -37,7 +37,7 @@ jobs:
           echo "CONTENT={$(node ./scripts/get-changed-content.js ${{github.sha}})" >> $GITHUB_OUTPUT
       - name: ❓ Content
         run: >-
-          echo "CONTENT: ${{ env.CONTENT }}"
+          echo "CONTENT: ${{ steps.content_changes.outputs.CONTENT }}"
 
   deploy:
     name: Deploy
