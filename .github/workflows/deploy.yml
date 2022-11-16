@@ -84,8 +84,8 @@ jobs:
         uses: cloudflare/pages-action@1
         with:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT }}
-          projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
-          directory: assets
+          projectName: 'remix-blog-cloudflare'
+          directory: 'build'
           apiToken: ${{ secrets.CLOUDFLARE_GLOBAL_TOKEN }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
         env:
