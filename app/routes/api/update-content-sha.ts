@@ -1,4 +1,5 @@
-import { ActionFunction, json } from "@remix-run/cloudflare";
+import type { ActionFunction} from "@remix-run/cloudflare";
+import { json } from "@remix-run/cloudflare";
 
 // declare var CONTENT: KVNamespace;
 declare var POST_API_KEY: string;

@@ -38,7 +38,7 @@ jobs:
           echo "CONTENT=$(node ./scripts/get-changed-content.js ${{ github.sha }})" >> $GITHUB_OUTPUT
       - name: ❓ Content
         run: >-
-          echo "CONTENT: ${{ steps.content_changes.outputs.CONTENT }}"
+          echo "CONTENT: ${{ !!steps.content_changes.outputs.CONTENT }}"
 
   deploy:
     name: Deploy
