@@ -12,7 +12,7 @@ jobs:
     outputs:
       DEPLOYABLE: ${{ steps.deploy_changes.outputs.DEPLOYABLE }}
       CONTENT: ${{ steps.content_changes.outputs.CONTENT }}
-      CONTENT_CHANGED: ${{ steps.content_changes.outputs.CONTENT_CHANGED }}
+      CONTENT_CHANGED: ${{ Boolean(steps.content_changes.outputs.CONTENT) }}
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
@@ -36,10 +36,8 @@ jobs:
         id: content_changes
         run: >-
           echo "CONTENT=$(node ./scripts/get-changed-content.js ${{ github.sha }})" >> $GITHUB_OUTPUT
-          echo "CONTENT_CHANGED=${{ Boolean($(node ./scripts/get-changed-content.js ${{ github.sha }})) }}" >> $GITHUB_OUTPUT
       - name: ❓ Content
         run: >-
-          echo "CONTENT_CHANGED: ${{ steps.content_changes.outputs.CONTENT_CHANGED }}"
           echo "CONTENT: ${{ steps.content_changes.outputs.CONTENT }}"
 
   deploy:
