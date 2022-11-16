@@ -28,9 +28,10 @@ async function getCommit() {
 }
 
 async function go() {
+  const commit = await getCommit()
   const buildInfo = {
     buildTime: Date.now(),
-    commit: await getCommit(),
+    commit,
   };
 
   fs.writeFileSync(
@@ -39,4 +40,4 @@ async function go() {
   );
   console.log("build info generated", buildInfo);
 }
-go();
+await go();
