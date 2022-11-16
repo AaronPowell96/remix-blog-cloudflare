@@ -5,22 +5,25 @@ import fetch from "node-fetch";
 const commit = process.env.COMMIT_SHA;
 
 async function getCommit() {
+  console.log(`Getting commit: ${commit}`);
   if (!commit) return { sha: "" };
+
   try {
     const res = await fetch(
       `https://api.github.com/repos/${process.env.GITHUB_REPO}/commits/${commit}`
     );
     const data = await res.json();
+    console.log(`Found commit: ${JSON.stringify(data?.commit,null,2)}`)
     return {
       isDeployCommit: commit === "HEAD" ? "Unknown" : true,
-      sha: data.sha,
-      author: data.commit.author.name,
-      date: data.commit.author.date,
-      message: data.commit.message,
+      sha: data?.sha,
+      author: data?.commit?.author?.name || data?.commit?.committer?.name,
+      date: data?.commit?.author?.date || data?.commit?.committer?.date,
+      message: data?.commit?.message,
       link: data.html_url,
     };
   } catch (error) {
-    return `Unable to get git commit info: ${error.message}`;
+    return { sha: '' }
   }
 }
 
