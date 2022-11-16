@@ -40,4 +40,4 @@ async function go() {
   );
   console.log("build info generated", buildInfo);
 }
-await go();
+go();
