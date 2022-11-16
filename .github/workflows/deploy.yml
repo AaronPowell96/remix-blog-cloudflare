@@ -12,7 +12,7 @@ jobs:
     outputs:
       DEPLOYABLE: ${{ steps.deploy_changes.outputs.DEPLOYABLE }}
       CONTENT: ${{ steps.content_changes.outputs.CONTENT }}
-      CONTENT_CHANGED: ${{ Boolean(steps.content_changes.outputs.CONTENT) }}
+      CONTENT_CHANGED: ${{ !!steps.content_changes.outputs.CONTENT }}
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
