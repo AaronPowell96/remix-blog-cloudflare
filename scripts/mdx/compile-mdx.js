@@ -208,6 +208,9 @@ const isLocalHostRunning = async () => {
   };
 
   for await (let mdxPath of mdxPaths) {
+    if(!mdxPath.endsWith(".mdx")){
+      continue;
+    }
     const fullPath = path.join(process.cwd(), rootPath, mdxPath);
     const slug = mdxPath.split(path.sep).slice(1).join("/").replace(".mdx", "");
     msgs = [];
