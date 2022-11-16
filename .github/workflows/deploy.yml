@@ -9,9 +9,6 @@ jobs:
   changes:
     name: 🔎 Determine deployable changes
     runs-on: ubuntu-latest
-    outputs:
-      DEPLOYABLE: ${{steps.deploy_changes.outputs.DEPLOYABLE}}
-      CONTENT: ${{steps.content_changes.outputs.CONTENT}}
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v2
@@ -26,25 +23,23 @@ jobs:
       - name: 🔎 Determine deployable changes
         id: deploy_changes
         run: >-
-          echo ::set-output name=DEPLOYABLE::$(node ./scripts/is-deployable.js ${{github.sha}})
-
+          echo "{DEPLOYABLE}={$(node ./scripts/is-deployable.js ${{github.sha}})}" >> $GITHUB_OUTPUT
       - name: ❓ Deployable
         run: >-
-          echo "DEPLOYABLE: ${{steps.deploy_changes.outputs.DEPLOYABLE}}"
+          echo "DEPLOYABLE: ${{env.DEPLOYABLE}}"
 
       - name: 🔎 Determine content changes
         id: content_changes
         run: >-
-          echo ::set-output name=CONTENT::$(node ./scripts/get-changed-content.js ${{github.sha}})
-
+          echo "{CONTENT}={$(node ./scripts/get-changed-content.js ${{github.sha}})" >> $GITHUB_OUTPUT
       - name: ❓ Content
         run: >-
-          echo "CONTENT: ${{steps.content_changes.outputs.CONTENT}}"
+          echo "CONTENT: ${{env.CONTENT}}"
 
   deploy:
     name: Deploy
     needs: [changes]
-    if: needs.changes.outputs.DEPLOYABLE == 'true'
+    if: env.DEPLOYABLE == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: 🛑 Cancel Previous Runs
@@ -93,7 +88,7 @@ jobs:
 
   compile:
     name: 🛠 Compile MDX
-    if: needs.changes.outputs.CONTENT != ''
+    if: env.CONTENT != ''
     needs: [changes]
     runs-on: ubuntu-latest
     steps:
@@ -123,7 +118,7 @@ jobs:
         run: cd ./scripts/mdx && npm install
 
       - name: 🚀 Compile and post MDX
-        run: cd ./scripts/mdx && node ./compile-mdx.js --root ../../ --json --file ${{needs.changes.outputs.CONTENT}}
+        run: cd ./scripts/mdx && node ./compile-mdx.js --root ../../ --json --file ${{env.CONTENT}}
         env:
           API_URL: ${{ secrets.API_URL }}
           POST_API_KEY: ${{ secrets.POST_API_KEY }}
