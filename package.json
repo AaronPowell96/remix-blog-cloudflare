@@ -3,7 +3,7 @@
   "sideEffects": false,
   "scripts": {
     "start": "cross-env NODE_ENV=production npm run dev:wrangler",
-    "clean": "rm -rf dist build public/build",
+    "clean": "rm -rf dist build public/build app/.cache.json",
     "build": "remix build && node ./scripts/generate-build-info.js",
     "dev": "remix build && run-p \"dev:*\" \"content:watch\"",
     "dev:remix": "remix watch",
