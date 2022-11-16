@@ -89,7 +89,7 @@ export let meta: MetaFunction = ({ data }) => {
   };
 };
 export default function Post() {
-  const { html, frontmatter, code, env, context } = useLoaderData();
+  const { html, frontmatter, code, env } = useLoaderData();
   // const Component = getMDXComponent(code || '');
   return (
     <>
@@ -105,7 +105,7 @@ export default function Post() {
       <p>-----------------------</p>
       <p>-----------------------</p>
       <p>-----------------------</p>
-      <p>hi nopeeeeeee {JSON.stringify(context, null, 2)}</p>
+      {/* <p>hi nopeeeeeee {JSON.stringify(context, null, 2)}</p> */}
     </>
   );
 }

@@ -58,5 +58,6 @@ async function go() {
 }
 
 go().catch((e) => {
-  console.log(true);
+  console.error(e);
+  console.log("");
 });
