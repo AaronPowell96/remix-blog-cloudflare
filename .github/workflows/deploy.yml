@@ -9,6 +9,9 @@ jobs:
   changes:
     name: 🔎 Determine deployable changes
     runs-on: ubuntu-latest
+    outputs:
+      DEPLOYABLE: ${{steps.deploy_changes.outputs.DEPLOYABLE}}
+      CONTENT: ${{steps.content_changes.outputs.CONTENT}}
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v2
@@ -26,7 +29,7 @@ jobs:
           echo "{DEPLOYABLE}={$(node ./scripts/is-deployable.js ${{github.sha}})}" >> $GITHUB_OUTPUT
       - name: ❓ Deployable
         run: >-
-          echo "DEPLOYABLE: ${{env.DEPLOYABLE}}"
+          echo "DEPLOYABLE: ${{ env.DEPLOYABLE }}"
 
       - name: 🔎 Determine content changes
         id: content_changes
@@ -34,12 +37,12 @@ jobs:
           echo "{CONTENT}={$(node ./scripts/get-changed-content.js ${{github.sha}})" >> $GITHUB_OUTPUT
       - name: ❓ Content
         run: >-
-          echo "CONTENT: ${{env.CONTENT}}"
+          echo "CONTENT: ${{ env.CONTENT }}"
 
   deploy:
     name: Deploy
     needs: [changes]
-    if: env.DEPLOYABLE == 'true'
+    if: needs.changes.outputs.DEPLOYABLE == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: 🛑 Cancel Previous Runs
@@ -88,7 +91,7 @@ jobs:
 
   compile:
     name: 🛠 Compile MDX
-    if: env.CONTENT != ''
+    if: needs.changes.outputs.CONTENT != ''
     needs: [changes]
     runs-on: ubuntu-latest
     steps:
@@ -118,7 +121,7 @@ jobs:
         run: cd ./scripts/mdx && npm install
 
       - name: 🚀 Compile and post MDX
-        run: cd ./scripts/mdx && node ./compile-mdx.js --root ../../ --json --file ${{env.CONTENT}}
+        run: cd ./scripts/mdx && node ./compile-mdx.js --root ../../ --json --file ${{needs.changes.outputs.CONTENT}}
         env:
           API_URL: ${{ secrets.API_URL }}
           POST_API_KEY: ${{ secrets.POST_API_KEY }}
