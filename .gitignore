@@ -1,8 +1,20 @@
 node_modules
+.env
 
-/.cache
+# Locally built project files.
+/build
+/public/build
 /functions/\[\[path\]\].js
 /functions/\[\[path\]\].js.map
-/public/build
-/.wrangler
 .env
+
+
+# Local caching files
+/.cache
+.cache
+.cache.json
+wrangler-local-state/*
+/.wrangler
+
+.mf/*
+.DS_Store

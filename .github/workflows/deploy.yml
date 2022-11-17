@@ -85,7 +85,7 @@ jobs:
         with:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT }}
           projectName: 'remix-blog-cloudflare'
-          directory: 'build'
+          directory: '/public'
           apiToken: ${{ secrets.CLOUDFLARE_TOKEN }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
         env:
