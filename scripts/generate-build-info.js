@@ -2,47 +2,26 @@ const path = require("path");
 const fs = require("fs");
 // this is installed by remix...
 // eslint-disable-next-line import/no-extraneous-dependencies
-const https = require("https");
+const fetch = require("node-fetch");
 
-function fetchJson(url) {
-  return new Promise((resolve, reject) => {
-    https
-      .get(url, (res) => {
-        let data = "";
-        res.on("data", (d) => {
-          data += d;
-        });
-
-        res.on("end", () => {
-          try {
-            resolve(JSON.parse(data));
-          } catch (error) {
-            reject(error);
-          }
-        });
-      })
-      .on("error", (e) => {
-        reject(e);
-      });
-  });
-}
 async function getCommit() {
   const commit = process.env.COMMIT_SHA;
   try {
-    const res = await fetchJson(
+    const res = await (await fetch(
       `https://api.github.com/repos/${process.env.GITHUB_REPO}/commits`
-    );
+    ))?.json()
 
     console.log("res from github api", res)
     const data = res?.[0];
 
     if(!data?.sha){
       console.log("No sha from github api, using get-content-sha")
-      const buildInfo = await fetchJson(
+      const buildInfo = await (await fetch(
         "https://remix-blog-cloudflare.pages.dev/api/get-content-sha"
-      );
+      ))?.json()
 
-      console.log("build info from content sha", buildInfo)
+
+      console.log("build info from content", buildInfo)
       if(buildInfo?.commit) {
         return buildInfo?.commit
       }
