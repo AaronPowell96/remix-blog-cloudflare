@@ -81,13 +81,12 @@ jobs:
       #     apiToken: ${{ secrets.CLOUDFLARE_GLOBAL_TOKEN }}
 
       - name: 🎉 Publish
-        uses: cloudflare/pages-action@1
+        uses: Cyb3r-Jak3/actions-cloudflare-pages@v1.0.1
         with:
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT }}
-          projectName: 'remix-blog-cloudflare'
-          directory: '/public'
-          apiToken: ${{ secrets.CLOUDFLARE_TOKEN }}
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          account: ${{ secrets.CLOUDFLARE_ACCOUNT }}
+          project: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+          email: ${{ secrets.CLOUDFLARE_EMAIL }}
+          global_token: ${{ secrets.CLOUDFLARE_GLOBAL_TOKEN }}
         env:
           COMMIT_SHA: ${{ github.sha }}
 
