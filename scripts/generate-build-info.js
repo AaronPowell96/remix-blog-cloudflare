@@ -7,8 +7,6 @@ const fetch = require("node-fetch");
 
 async function getCommit() {
   const commit = process.env.COMMIT_SHA;
-  console.log("commit", commit)
-  if (!commit) return { sha: "" };
   try {
     const res = await fetch(
       `https://api.github.com/repos/${process.env.GITHUB_REPO}/commits`
@@ -24,7 +22,9 @@ async function getCommit() {
       link: data.html_url,
     };
   } catch (error) {
-    return `Unable to get git commit info: ${error.message}`;
+    console.log("Err build info: ", error)
+    if (!commit) return { sha: "" }
+    return {sha: commit};
   }
 }
 
