@@ -28,10 +28,9 @@ async function getCommit() {
 }
 
 async function go() {
-  const commit = await getCommit()
   const buildInfo = {
     buildTime: Date.now(),
-    commit,
+    commit: await getCommit(),
   };
 
   fs.writeFileSync(
