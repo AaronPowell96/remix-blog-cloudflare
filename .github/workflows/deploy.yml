@@ -84,7 +84,7 @@ jobs:
         uses: Cyb3r-Jak3/actions-cloudflare-pages@v1.0.1
         with:
           account: ${{ secrets.CLOUDFLARE_ACCOUNT }}
-          project: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+          project: remix-blog-cloudflare
           email: ${{ secrets.CLOUDFLARE_EMAIL }}
           global_token: ${{ secrets.CLOUDFLARE_GLOBAL_TOKEN }}
         env:

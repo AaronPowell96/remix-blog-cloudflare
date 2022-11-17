@@ -4,9 +4,10 @@ const fs = require("fs");
 // eslint-disable-next-line import/no-extraneous-dependencies
 const fetch = require("node-fetch");
 
-const commit = process.env.COMMIT_SHA;
 
 async function getCommit() {
+  const commit = process.env.COMMIT_SHA;
+  console.log("commit", commit)
   if (!commit) return { sha: "" };
   try {
     const res = await fetch(
