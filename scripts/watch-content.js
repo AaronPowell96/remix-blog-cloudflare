@@ -5,6 +5,8 @@ const exec = require("util").promisify(require("child_process").exec);
 // Local files for handling KV storage and cache.
 // cache.json is inside app to trigger Hot Module Reloading on changes.
 const cacheFilePath = `.${path.sep}app${path.sep}.cache.json`;
+// console.log("Cache file path", cacheFilePath)
+
 (async function () {
   await main();
 })();
@@ -30,14 +32,23 @@ async function main() {
         // Early return if no change.
         return;
       }
+      console.log("before  compile")
+      try{
       console.time(`Time to Compile ${contentPath}`);
+      console.log("compiling", contentPath)
       const results = await doCompile(contentPath);
-      const { hash } = results?.[contentPath];
+      console.log("compiled", contentPath, results)
+      const res = results?.[contentPath];
+      if(lastModified && res?.hash){
       updateCache(cache, contentPath, {
         lastModified,
-        hash,
+        hash: res?.hash,
       });
-      console.timeEnd(`Time to Compile ${contentPath}`);
+    }
+      console.timeEnd(`Time to Compile ${contentPath}`);}
+      catch(e){
+        console.log("Failed to compile", e)
+      }
     });
   } catch (e) {
     console.error(e);
@@ -56,9 +67,11 @@ async function doCompile(contentPath) {
     return e
   });
   if(out.stderr){
-    console.error(out.stderr);
+    console.error("ERROR COMPILING",  out.stderr);
     return;
   }
+
+  // console.error("stdout", out.stdout)
   return JSON.parse(out.stdout);
 }
 
@@ -67,6 +80,7 @@ function validContentPath(contentPath) {
   const match = /\/?(?<dir>content\/(?:.*))\/(?<file>[^.]+\.mdx)$/gm.exec(
     _contentPath
   );
+  console.log("valid file path", contentPath, match)
   if (!match) return { match: false };
   const { dir, file } = match.groups;
   return { match: true, dir: dir.replaceAll("/", path.sep), file };

@@ -49,13 +49,13 @@ const isLocalHostRunning = async () => {
 
 
   if (process.env.NODE_ENV === "development") {
-    
+    try{
     let retry = 0;
-    let exists = isLocalHostRunning();
+    let exists = await isLocalHostRunning();
     // Possible race condition? Sleep or somehow await for it to be running (Loop check its up?)
     while (!exists) {
       // Sleep one second give localhost a chance to spinup.
-      exists = isLocalHostRunning();
+      exists = await isLocalHostRunning();
       await new Promise((resolve) => setTimeout(resolve, 1000));
       retry++;
 
@@ -66,6 +66,9 @@ const isLocalHostRunning = async () => {
         process.exit(1);
       }
     }
+  }catch(e){
+    console.error("FAILED TO WAIT FOR LOCALHOST", e)
+  }
   }
 
   cloudinary.v2.config({
@@ -75,18 +78,19 @@ const isLocalHostRunning = async () => {
   });
 
   let cloudinary_resources;
+  const images = {};
+  let msgs = [];
+  let temp_code = '';
 
   try {
     cloudinary_resources = (await cloudinary.v2.api.resources())?.resources;
+    msgs.push("got resources")
   } catch (e) {
-    console.log("errrr", e);
+    console.error("COULD NOT GET RESOURCES", e);
   }
   // change to object with key being the src and value being remotesource so we can shortcut
   // if already exists
 
-  const images = {};
-  let msgs = [];
-  let temp_code = '';
     //   const ParagraphimageSourceReplace = (props) => {
     //   // console.log("child type of P", props.children.type)
     //   console.error("props", props)
@@ -101,24 +105,35 @@ const isLocalHostRunning = async () => {
     // };
 
   const injectRemoteImages = async (code) => {
+    msgs.push("inject remote images called")
     temp_code = code;
-    [...code.matchAll(/src: *"(.*)"/g)].forEach(([,match]) => {
+    [...code.matchAll(/src: *"(.[^"']*)"/g)].forEach(([,match]) => {
       imageSourceReplace(match);
     });
 
     // console.error(temp_code)
+    try{
     await uploadInjectedImages();
+    }catch(e){
+      console.error("FAILED TO UPLOAD INJECTED IMAGES", e)
+    }
     // const MDXComponent = getMDXComponent(temp_code);
     const html = renderToString(React.createElement(getMDXComponent(temp_code)));
     return {html, transformedCode: temp_code}
   }
 
   const cloudinaryUpload = async (props) => {
-    const exists = await cloudinary.v2.api.resource(props.public_id)
+    msgs.push("calling  resource api  exists")
+    let exists;
+    
+    try{
+      exists= await cloudinary.v2.api.resource(props.public_id)
+    }catch(e){
+    }
     // console.log("cloudinary upload",  props)
       // console.warn("exists", exists)
       msgs.push(`Looking at image: ${props.src}, ${exists  ?  'already exists' : 'processing'}`)
-      if(!exists){
+      if(!exists){ 
         msgs.push("Uploading image: " + props.src + " with " + props.transforms);
           try {
             await cloudinary.v2.uploader.upload(props.src, {
@@ -130,7 +145,7 @@ const isLocalHostRunning = async () => {
             });
             msgs.push(`Succesfully uploaded ${props.public_id}`);
           } catch (err) {
-            console.warn({ "UPLOAD FAILED": props.public_id, ...err });
+            console.error({ "UPLOAD FAILED": props.public_id, ...err });
           }
         }
           else if(props.transforms.length && !exists.derived.find((d) => d.transformation === props.transforms.join(","))){
@@ -139,18 +154,24 @@ const isLocalHostRunning = async () => {
             await cloudinary.v2.uploader.explicit(props.src, {type: 'upload', public_id: props.public_id, eager: props.transforms.join(",")} )
             msgs.push(`Succesfully Added Transformation for ${props.public_id} - ${props.transforms}`);
             }catch (err) {
-              console.warn({ "ADD TRANSFORM FAILED": props.public_id, ...err });
+              console.error({ "ADD TRANSFORM FAILED": props.public_id, ...err });
             }
           }else{
             msgs.push("Image already exists, no new transformations added. " + props.public_id + " with " + props.transforms);
           }
   }
   const uploadInjectedImages = async () => {
+    try{
+    msgs.push("upload images", JSON.stringify(Object.keys(images)))
     for await (const image of Object.keys(images)) {
       const props = images[image];
+      msgs.push("image upload call:", images[image]?.public_id)
       // console.log("HTML IN LOOP", html)
       await cloudinaryUpload(props)
     }
+  }catch(e){
+    console.error("FAILED TO UPLOAD INJECTED IMAGES LOOPS", e)
+  }
   }
   const imageSourceReplace = (src) => {
     // 
@@ -168,12 +189,13 @@ const isLocalHostRunning = async () => {
     const imageIndex = src.indexOf("images") || 0;
     let transforms =
       imageIndex !== 0 ? src.substring(0, imageIndex - 1).split(",") : [];
-
     const localSource = path.join(
       rootPath,
       "content",
       src.substring(imageIndex)
     );
+    msgs.push("ORIGINAL SOURCE OF IMAGE", src);
+    msgs.push("LOCAL SOURCE OF IMAGE", localSource)
     const public_id = `${src.substring(imageIndex).split(".")[0]}`;
     let existingResource = cloudinary_resources?.find(
       (image) => image.public_id === public_id
@@ -197,6 +219,7 @@ const isLocalHostRunning = async () => {
         
         // console.warn("remoteSource", remoteSource)
 
+    msgs.push("Pushing image", public_id)
     images[src] = { public_id, src: localSource, transforms, remoteSource };
     temp_code = temp_code.replaceAll(`"${src}"`, `"${remoteSource}"`);
     return { public_id, src: localSource, transforms, remoteSource };
@@ -207,6 +230,7 @@ const isLocalHostRunning = async () => {
     // });
   };
 
+  try{
   for await (let mdxPath of mdxPaths) {
     if(!mdxPath.endsWith(".mdx")){
       continue;
@@ -338,6 +362,9 @@ const isLocalHostRunning = async () => {
     };
     // console.error("CODEEE", code)
   }
+}catch(e){
+  console.error("ERROR IN LOOPING MDX PATHS", mdxPaths, e)
+}
 
   if (options.json) {
     console.log(JSON.stringify(results, null, 2));

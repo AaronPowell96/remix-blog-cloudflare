@@ -18,3 +18,4 @@ wrangler-local-state/*
 
 .mf/*
 .DS_Store
+app/.cache.json
