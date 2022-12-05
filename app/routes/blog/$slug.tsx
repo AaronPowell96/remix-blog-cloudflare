@@ -3,13 +3,11 @@ import type {   HeadersFunction,
   MetaFunction,
 LoaderFunction } from "@remix-run/cloudflare";
 import { json} from  "@remix-run/cloudflare"
-import { getMDXComponent } from "~/utils/mdx.client";
 import { siteTitle } from "~/utils/constants";
 import { MDXContent } from "../../components/MDXContent";
 import type { ReactNode } from "react";
 import { useLoaderData } from "@remix-run/react";
 
-declare var CONTENT: KVNamespace;
 
 export const links: LinksFunction = () => [
   {
@@ -81,7 +79,7 @@ export let meta: MetaFunction = ({ data }) => {
     description = data.frontmatter.description;
   }
   return {
-    title: "aaaaa",
+    title,
     description,
     "twitter:card": "summary_large_image",
     ...data?.frontmatter,
@@ -93,23 +91,11 @@ export let meta: MetaFunction = ({ data }) => {
   };
 };
 export default function Post() {
-  const { html, frontmatter, code, env } = useLoaderData();
+  const { html,code, } = useLoaderData();
   // const Component = getMDXComponent(code || '');
   return (
     <>
-      {/* <Component/> */}
       <MDXContent html={html} code={code}/>
-      <p>{frontmatter ? JSON.stringify(frontmatter, null, 2): "no env"}</p>
-      <p>-----------------------</p>
-      <p>-----------------------</p>
-      <p>-----------------------</p>
-      <p>-----------------------</p>
-      <p>-----------------------</p>
-      <p>-----------------------</p>
-      <p>-----------------------</p>
-      <p>-----------------------</p>
-      <p>-----------------------</p>
-      {/* <p>hi nopeeeeeee {JSON.stringify(context, null, 2)}</p> */}
     </>
   );
 }
