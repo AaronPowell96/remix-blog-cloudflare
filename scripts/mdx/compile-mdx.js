@@ -59,7 +59,7 @@ const isLocalHostRunning = async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       retry++;
 
-      if (retry > 5) {
+      if (retry > 10) {
         console.error(
           `SHUTTING DOWN: Cannot connect to ${process?.env?.BASE_URL} after 5 retrys.`
         );
@@ -249,6 +249,7 @@ const isLocalHostRunning = async () => {
       // Don't minify source in development, allowing inspection.
       esbuildOptions(options, formatter) {
         options.minify = process.env.NODE_ENV !== "development";
+        options.outdir = './build/test'
         return options;
       },
       // XDM Highlight <pre></pre> tags
@@ -324,9 +325,6 @@ const isLocalHostRunning = async () => {
     // }
 
 
-    // console.error("HTML", html, "code", code);
-    // Send changed content to the cache.
-    
     const response = await fetch(`${process?.env?.API_URL}/post-content`, {
       method: "post",
       body: JSON.stringify({

@@ -32,9 +32,13 @@ export const loader: LoaderFunction = async ({request, context, params}) => {
   const CONTENT = context.CONTENT as KVNamespace;
   // console.log("content", context)
   const slug = params['slug']
+
   if (slug === undefined || !CONTENT.get(`blog/${slug}`)) {
     throw new Response("Not Found", { status: 404 });
   }
+
+  
+  console.log("CONTENT", CONTENT)
   const data = await CONTENT.get(`blog/${slug}`, "json");
   // console.log("DATA", data)
   if (data === undefined) {

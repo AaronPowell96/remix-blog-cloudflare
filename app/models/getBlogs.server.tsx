@@ -21,6 +21,7 @@ type Blog = {
     // if (slug === undefined) {
     //   throw new Response("Not Found", { status: 404 });
     // }
+
     const {keys: blogs} = await CONTENT.list({prefix: "blog"});
   
     return blogs as Blog[]

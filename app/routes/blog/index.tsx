@@ -48,15 +48,20 @@ export default function Index() {
     return (
       <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
         <h1>Blogs</h1>
-        <ul>
-            {blogs.map(({name, metadata}) => {
+        <ul style={{display: 'flex',flexWrap: 'wrap', gap: '16px', justifyContent: 'center', alignItems: 'center'}}>
+            {blogs.map(({name, metadata,title}) => {
                 return (
-                    <a href={name} key={name}>
-                    <li>
+                    <a style={{background:  '#31c1f1'}} href={name} key={name}>
+                     {metadata["og:image"] ? <img src={metadata["og:image"]} alt="Header" style={{width: '250px', height:'250px'}}/> : null}
+                        <h5>
                         {metadata.title}
-                        {JSON.stringify(metadata, null, 2)}
-                    </li>
-                    <span>oops</span>
+                          </h5>
+                       <h6>
+                         {metadata.description}
+                        </h6>
+                          <span>
+                            Published at {new Date(metadata.published).toLocaleDateString()}
+                            </span>
                     </a>
                 )
             })}
