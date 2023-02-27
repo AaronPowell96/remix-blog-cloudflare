@@ -1,11 +1,12 @@
 // @import './test.scss';
 
-html, * {
-box-sizing: border-box;
-// font-family: 'Arial';
+html,
+* {
+    box-sizing: border-box;
+    // font-family: 'Arial';
 }
 
 code {
-    font-family: "Operator Mono SSm Lig", Menlo, Monaco, Consolas, "Courier New",
-      monospace;
-  }
+    font-family: 'Operator Mono SSm Lig', Menlo, Monaco, Consolas, 'Courier New',
+        monospace;
+}

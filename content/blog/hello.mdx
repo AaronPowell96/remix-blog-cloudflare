@@ -9,38 +9,32 @@ og:image: images/abc.svg
 # image:transforms: co_yellow,g_north - comma separated list of cloudinary transforms
 # image:disable_text: true - disable title text in the og:image
 ---
-import {Test} from "../../app/components/Test.tsx"
 
-# ----aaaaaaaaaaa------0000ppp
+{/* // import {Test} from "../../app/components/Test.tsx" */}
+import {Button} from "../../app/components/Button.tsx"
+
+# ----aaaaaaaaaaa------0000
 
 asdasdasdsaeesdfd
 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi non qui
-asd?
+asd?0
 
-
-<Test/>
+{/* <Test/> */}
 hi
 
 {/* ![aaa](images/abc.svg) */}
 
- {/* !(h_800,w_800/images/abc.jpg) */}
- ![Tux, the Linux malscot](images/abc.svg) 
+{/* !(h_800,w_800/images/abc.jpg) */}
+![Tux, the Linux malscot](images/abc.svg)
 
-<img alt="Tux, the Linux mascot"  style={{height: "300px", width: "300px"}} height="800px" width="800px" src="h_800,w_800/b_rgb:FEB61FC2,co_yellow,l_text:Arial_100:oooo by Cloudinary/images/abc.jpg"/>
- 
-```ts
-// comm
-console.log("nope lol");  000
-```
-```ts
-// comm
-console.log("hiii");
-```
-```ts
-// comm
-console.log("hiii");
-```
-```ts
-// comm
-console.log("hiii");
-```
+<Button onClick={() => window.alert('test')}>Click me</Button>
+<img
+    alt="Tux, the Linux mascot"
+    style={{ height: '300px', width: '300px' }}
+    height="800px"
+    width="800px"
+    src="h_800,w_800/b_rgb:FEB61FC2,co_yellow,l_text:Arial_100:oooo by Cloudinary/images/abc.jpg"
+/>
+```ts // comm console.log("nope lol"); 000 ``` ```ts // comm
+console.log("hiii"); ``` ```ts // comm console.log("hiii"); ``` ```ts // comm
+console.log("hiii"); ```

@@ -1,10 +1,10 @@
-import type { LoaderFunction } from "@remix-run/cloudflare";
-import { json } from "@remix-run/cloudflare";
+import type { LoaderFunction } from '@remix-run/cloudflare'
+import { json } from '@remix-run/cloudflare'
 
-export const loader: LoaderFunction = async ({context}) => {
-  const CONTENT = context.CONTENT as KVNamespace
-  const data = (await CONTENT.get("$$content-sha", "json")) || {
-    commit: { sha: "" },
-  };
-  return json(data);
-};
+export const loader: LoaderFunction = async ({ context }) => {
+    const CONTENT = context.CONTENT as KVNamespace
+    const data = (await CONTENT.get('$$content-sha', 'json')) || {
+        commit: { sha: '' },
+    }
+    return json(data)
+}

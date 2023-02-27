@@ -1,44 +1,52 @@
 {
-  "private": true,
-  "sideEffects": false,
-  "scripts": {
-    "start": "cross-env NODE_ENV=production npm run dev:wrangler",
-    "clean": "rm -rf dist build public/build app/.cache.json",
-    "build": "run-s build:*",
-    "build:css": "sass app/:app/ --style=compressed --no-source-map",
-    "build:remix": "remix build",
-    "build:info": "node ./scripts/generate-build-info.js",
-    "dev": "npm run build && run-p \"dev:*\" \"content:watch\"",
-    "dev:wrangler": "cross-env NODE_ENV=development wrangler pages dev ./public --kv CONTENT --port 8788 --persist --live-reload",
-    "dev:remix": "remix watch",
-    "postinstall": " cd scripts/mdx && npm install",
-    "content:watch": "cross-env node ./scripts/watch-content.js",
-    "deploy": "npm run build && wrangler publish",
-    "act": "act compile-mdx -j compile --secret-file .env --container-architecture linux/amd64"
-  },
-  "dependencies": {
-    "@remix-run/cloudflare": "^1.6.4",
-    "@remix-run/cloudflare-pages": "^1.6.4",
-    "@remix-run/react": "^1.6.4",
-    "cross-env": "^7.0.3",
-    "mdx-bundler": "^8.1.0",
-    "query-string": "^7.1.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "sass": "^1.56.1"
-  },
-  "devDependencies": {
-    "@cloudflare/workers-types": "^3.18.0",
-    "@remix-run/dev": "^1.6.4",
-    "@remix-run/eslint-config": "^1.6.4",
-    "@types/react": "^17.0.52",
-    "@types/react-dom": "^17.0.18",
-    "eslint": "^8.27.0",
-    "npm-run-all": "^4.1.5",
-    "typescript": "^4.8.4",
-    "wrangler": "^2.2.1"
-  },
-  "engines": {
-    "node": ">=16.13"
-  }
+    "private": true,
+    "sideEffects": false,
+    "scripts": {
+        "start": "cross-env NODE_ENV=production npm run dev:wrangler",
+        "clean": "rm -rf dist build public/build app/.cache.json",
+        "build": "run-s build:*",
+        "build:css": "sass app/:app/ --style=compressed --no-source-map",
+        "build:remix": "remix build",
+        "build:info": "node ./scripts/generate-build-info.js",
+        "dev": "npm run build && run-p \"dev:*\" \"content:watch\"",
+        "test": "wrangler pages dev ./public --port 8788 --kv CONTENT --persist",
+        "dev:wrangler": "cross-env NODE_ENV=development wrangler pages dev ./public --kv CONTENT --port 8788 --persist --live-reload",
+        "dev:remix": "remix watch",
+        "postinstall": " cd scripts/mdx && npm install",
+        "content:watch": "cross-env node ./scripts/watch-content.js",
+        "pretter:app": "prettier './app' --write",
+        "deploy": "npm run build && wrangler publish",
+        "act": "act compile-mdx -j compile --secret-file .env --container-architecture linux/amd64"
+    },
+    "dependencies": {
+        "@remix-run/cloudflare": "^1.13.0",
+        "@remix-run/cloudflare-pages": "^1.13.0",
+        "@remix-run/react": "^1.13.0",
+        "@tabler/icons-react": "^2.4.0",
+        "babel-plugin-styled-components": "^2.0.7",
+        "cross-env": "^7.0.3",
+        "mdx-bundler": "^9.2.1",
+        "query-string": "^7.1.1",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "remix-island": "^0.1.2",
+        "sass": "^1.56.1",
+        "styled-components": "^5.3.6"
+    },
+    "devDependencies": {
+        "@cloudflare/workers-types": "^3.18.0",
+        "@lukalabs/esbuild-styled-components": "^1.0.1",
+        "@remix-run/dev": "^1.13.0",
+        "@remix-run/eslint-config": "^1.13.0",
+        "@types/react": "^18.0.28",
+        "@types/react-dom": "^18.0.11",
+        "@types/styled-components": "^5.1.26",
+        "eslint": "^8.27.0",
+        "npm-run-all": "^4.1.5",
+        "typescript": "^4.8.4",
+        "wrangler": "^2.2.1"
+    },
+    "engines": {
+        "node": ">=16.13"
+    }
 }

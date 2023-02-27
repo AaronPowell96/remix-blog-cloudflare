@@ -10,38 +10,44 @@ og:image: images/abc.svg
 TOPIC_DETAILS
 blah blah blah
 
-
 ## Getting started
-Preliminary question: 
-<button onClick={()=> alert(42)}>What is the answer to the mystery of universe ??</button>
+
+Preliminary question
+
+<button onClick={() => alert(42)}>
+    What is the answer to the mystery of universe ??
+</button>
 
 ## Footnote
 
 A note[^1]
 
 ## HTML block below
+
 <blockquote>
-This blockquote will change based on the HTML settings above.
+    This blockquote will change based on the HTML settings above.
 </blockquote>
 
 ## How about some code?
 
 ```js
-var React = require('react');
-var Markdown = require('react-markdown');
+var React = require('react')
+var Markdown = require('react-markdown')
 React.render(
-  <Markdown source="# Your markdown here" />,
-  document.getElementById('content')
-);
+    <Markdown source="# Your markdown here" />,
+    document.getElementById('content')
+)
 ```
+
 Pretty neat, eh?
 
 ## Tables?
+
 | Feature   | Support |
 | --------- | ------- |
-| tables    |    ✔    |
-| alignment | ✔ |
-| wewt      | ✔ |
+| tables    | ✔       |
+| alignment | ✔       |
+| wewt      | ✔       |
 
 ## Autolink literals
 
@@ -55,5 +61,5 @@ www.example.com, https://example.com, and contact@example.com.
 
 ## Tasklist
 
-* [ ] to do
-* [x] done
+-   [ ] to do
+-   [x] done
